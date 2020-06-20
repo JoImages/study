@@ -1,4 +1,4 @@
-package com.jason;
+package com.jason.queue;
 
 import java.util.Objects;
 
