@@ -1,5 +1,7 @@
 package com.jason;
 
+import java.util.Objects;
+
 /**
  * 链表练习
  * @projectName: study
@@ -13,7 +15,7 @@ public class NodeListDemo {
     public static void main(String[] args) {
         Node n1 = new Node(1);
         n1.next = new Node(3);
-        n1.next.next = new Node(5);
+        n1.next.next = new Node(1);
 
         Node n2 = new Node(2);
         n2.next = new Node(3);
@@ -21,9 +23,63 @@ public class NodeListDemo {
         n2.next.next.next = new Node(5);
         n2.next.next.next.next = new Node(6);
 
-        System.out.println(deleteLastKth(n1,3));
+        System.out.println(isPalindrome(n1));
 
 
+    }
+
+    /**
+     * 判断给定的单列表是否是回文
+     * @param head
+     * @return
+     */
+    private static boolean isPalindrome(Node node) {
+        Node p = null;
+        Node fast = node;
+        Node slow = node;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            Node next = slow.next;
+            slow.next = p;
+            p = slow;
+            slow = next;
+        }
+
+        if (fast != null) {
+            slow = slow.next;
+        }
+
+        while (slow != null) {
+            if (!slow.equals(p)) {
+                return false;
+            }
+            slow = slow.next;
+            p = p.next;
+        }
+        return true;
+    }
+
+    /**
+     * 单项列表反转
+     * @param node
+     * @return
+     */
+    private static Node reverse(Node node) {
+
+        Node head = new Node();
+        head.next = node;
+
+        Node prev = node;
+        Node next = node.next;
+
+        while (next != null) {
+            prev.next = next.next;
+            next.next = head.next;
+            head.next = next;
+            next = prev.next;
+        }
+
+        return head.next;
     }
 
     /**
@@ -144,6 +200,22 @@ public class NodeListDemo {
 
         public void setNext(Node next) {
             this.next = next;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o){ return true;}
+
+            if (o == null || getClass() != o.getClass()){ return false;}
+
+            Node node = (Node) o;
+            return val == node.val &&
+                    Objects.equals(next, node.next);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(val, next);
         }
 
         @Override
