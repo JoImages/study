@@ -12,9 +12,32 @@ public class SortDemo {
 
 
     public static void main(String[] args) {
-        int[] items = new int[]{3,2,5,1,56,8,123,789,0};
-        SortDemo.insertionSort(items, items.length);
-        System.out.println(Arrays.toString(items));
+        int[] items = new int[]{3,2,1,3,15,7,2,7,9,2,8,9,123,3};
+        System.out.println(Arrays.toString(SortDemo.mergeSort(items, 0, items.length-1)));
+
+    }
+
+    /**
+     * 归并排序算法
+     *  实现思路：
+     *  1.将当前数组根据中间节点分成两部分递归进行拆分
+     *  2.直到每个数组的长度为1
+     *  3.对相邻的两个数组进行有序合并
+     *  4.将所有的有序数组进行合并
+     * @param items 原始数组
+     * @param start 数组开始下标
+     * @param end 数组结束下标
+     * @return 排序完成的数组
+     */
+    private static int[] mergeSort(int[]items, int start, int end) {
+        if (start >= end) {
+            return new int[]{items[start]};
+        }
+        int center = (start + end) / 2;
+        int[] headArray = mergeSort(items, start, center);
+        int[] endArray = mergeSort(items, center + 1, end);
+        // 合并两个有序数组
+        return mergeTwoArray(headArray, endArray);
     }
 
     /**
@@ -72,6 +95,47 @@ public class SortDemo {
             // 没有数据交换，提前退出
             if (!flag){ break;}
         }
+    }
+
+    /**
+     * 合并两个有序数组
+     * @param a 数组1
+     * @param b 数组2
+     * @return 合并后的数组
+     */
+    private static int[] mergeTwoArray(int[] a, int[]b) {
+        int length = a.length + b.length;
+        int[] temp = new int[length];
+        if (length == 0) {
+            return temp;
+        }
+        int index = 0;
+        int i = 0;
+        int j = 0;
+        while (i != a.length && j != b.length) {
+            if (a[i] < b[j]) {
+                temp[index] = a[i];
+                i++;
+            } else {
+                temp[index] = b[j];
+                j++;
+            }
+            index++;
+        }
+
+        if (i != a.length) {
+            for (; i < a.length; i++) {
+                temp[index] = a[i];
+                index++;
+            }
+        }
+        if (j != b.length) {
+            for (; j < b.length; j++) {
+                temp[index] = b[j];
+                index++;
+            }
+        }
+        return temp;
     }
 
 }
