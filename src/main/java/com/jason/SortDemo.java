@@ -12,9 +12,52 @@ public class SortDemo {
 
 
     public static void main(String[] args) {
-        int[] items = new int[]{3,2,1,3,15,7,2,7,9,2,8,9,123,3};
-        System.out.println(Arrays.toString(SortDemo.mergeSort(items, 0, items.length-1)));
+        int[] items = new int[]{6,11,12,3,9,8,8};
+        SortDemo.quickSort(items, 0, items.length - 1);
 
+        System.out.println(Arrays.toString(items));
+
+    }
+
+    /**
+     * 快速排序
+     * @param items
+     * @param start
+     * @param end
+     * @return
+     */
+    private static void quickSort(int[] items, int start, int end) {
+        if (start >= end) {
+            return ;
+        }
+        // 找分区点
+        int pivot = getPivot(items, start, end);
+        quickSort(items, start, pivot - 1);
+        quickSort(items, pivot + 1, end);
+    }
+
+    /**
+     * 获取分区点
+     * @param items
+     * @param start
+     * @param end
+     * @return
+     */
+    private static int getPivot(int[]items, int start, int end) {
+        int pivot = items[end];
+        int i = start;
+        for (int j = start; j <= end - 1; j++) {
+            if (items[j] < pivot) {
+                int temp = items[j];
+                items[j] = items[i];
+                items[i] = temp;
+                ++i;
+            }
+        }
+        int temp = items[i];
+        items[i] = items[end];
+        items[end] = temp;
+        return i;
     }
 
     /**
