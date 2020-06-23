@@ -4,6 +4,7 @@ import javax.xml.soap.Node;
 
 /**
  * 二叉树学习
+ *
  * @author: 祁琦
  * @date: 2020/6/23 16:42
  * version: 1.0
@@ -11,18 +12,69 @@ import javax.xml.soap.Node;
 public class Tree {
 
     public static void main(String[] args) {
-        Node node = new Node(1);
-        node.left = new Node(2);
-        node.right = new Node(3);
-        node.left.left = new Node(4);
-        node.left.right = new Node(5);
-        node.right.left = new Node(6);
-        node.right.right = new Node(7);
-        postOrder(node);
+        Node node = new Node(33);
+        node.left = new Node(17);
+        node.right = new Node(50);
+        node.left.left = new Node(13);
+        node.left.right = new Node(18);
+        node.right.left = new Node(34);
+        node.right.right = new Node(58);
+        insert(node, 25);
+        System.out.println(node);
+//        System.out.println(find(node, 33));
+    }
+
+    /**
+     * 二叉查找树的插入操作
+     * @param node 希望插入的二叉查找树
+     * @param data 希望插入的节点的值
+     */
+    private static void insert(Node node, int data) {
+        Node p = node;
+        Node newNode = new Node(data);
+        while (p != null) {
+            if (data < p.val) {
+                if (p.left == null) {
+                    p.left = newNode;
+                    return;
+                }
+                p = p.left;
+            } else {
+                if (p.right == null) {
+                    p.right = newNode;
+                    return;
+                }
+                p = p.right;
+            }
+        }
+
+    }
+
+    /**
+     * 二叉查找树的查找操作
+     *
+     * @param node 节点node
+     * @param data 需要比对的数据
+     * @return
+     */
+    private static Node find(Node node, int data) {
+        if (node == null) {
+            return null;
+        }
+        if (node.val == data) {
+            return node;
+        }
+        if (data < node.val) {
+            node = node.left;
+        } else {
+            node = node.right;
+        }
+        return find(node, data);
     }
 
     /**
      * 前序遍历
+     *
      * @param node
      */
     private static void preOrder(Node node) {
@@ -36,6 +88,7 @@ public class Tree {
 
     /**
      * 中序遍历
+     *
      * @param node
      */
     private static void inOrder(Node node) {
@@ -49,6 +102,7 @@ public class Tree {
 
     /**
      * 后序遍历
+     *
      * @param node
      */
     private static void postOrder(Node node) {
@@ -60,11 +114,13 @@ public class Tree {
         System.out.println(node.val);
     }
 
-    private static class Node{
+    private static class Node {
         int val;
         Node left;
         Node right;
-        public Node(){}
+
+        public Node() {
+        }
 
         public Node(int val) {
             this.val = val;
