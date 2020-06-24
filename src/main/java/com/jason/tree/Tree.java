@@ -25,8 +25,7 @@ public class Tree {
     /**
      * 二叉查找树的删除操作
      *
-     * @param tree  二叉查找树
-     * @param data 需要删除的节点的值
+     * @param tree  二叉查找树 @param data 需要删除的节点的值
      */
 
     private static void delete(Node tree, int data) {
