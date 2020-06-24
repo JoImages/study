@@ -1,5 +1,7 @@
 package com.jason.tree;
 
+import java.util.ArrayDeque;
+
 /**
  * 二叉树学习
  *
@@ -17,15 +19,14 @@ public class Tree {
         node.left.right = new Node(18);
         node.right.left = new Node(34);
         node.right.right = new Node(58);
-        delete(node, 13);
-        System.out.println(node);
+        levelOrder(node);
 //        System.out.println(find(node, 33));
     }
 
     /**
      * 二叉查找树的删除操作
      *
-     * @param tree  二叉查找树 @param data 需要删除的节点的值
+     * @param tree 二叉查找树 @param data 需要删除的节点的值
      */
 
     private static void delete(Node tree, int data) {
@@ -42,7 +43,9 @@ public class Tree {
             }
         }
         // 没有找到
-        if (p == null){ return;}
+        if (p == null) {
+            return;
+        }
 
         // 要删除的节点有两个子节点
         // 查找右子树中最小节点
@@ -62,13 +65,21 @@ public class Tree {
         }
         // 删除节点是叶子节点或者仅有一个子节点
         Node child; // p的子节点
-        if (p.left != null){ child = p.left;}
-        else if (p.right != null){ child = p.right;}
-        else{ child = null;}
+        if (p.left != null) {
+            child = p.left;
+        } else if (p.right != null) {
+            child = p.right;
+        } else {
+            child = null;
+        }
         // 删除的是根节点
-        if (pp == null){ tree = child;}
-        else if (pp.left == p){ pp.left = child;}
-        else{ pp.right = child;}
+        if (pp == null) {
+            tree = child;
+        } else if (pp.left == p) {
+            pp.left = child;
+        } else {
+            pp.right = child;
+        }
     }
 
     /**
@@ -119,6 +130,27 @@ public class Tree {
         }
         return find(node, data);
     }
+
+    /**
+     * 二叉树的按层遍历
+     * @param node
+     */
+    private static void levelOrder(Node node) {
+        ArrayDeque<Node> queue = new ArrayDeque<>();
+        queue.add(node);
+        while (!queue.isEmpty()) {
+            Node pollNode = queue.poll();
+            System.out.println(pollNode.data);
+            if (pollNode.left != null) {
+                queue.add(pollNode.left);
+            }
+            if (pollNode.right != null) {
+                queue.add(pollNode.right);
+            }
+        }
+    }
+
+
 
     /**
      * 前序遍历
