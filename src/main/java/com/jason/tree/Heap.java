@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 /**
  * 堆
+ *
  * @author: 祁琦
  * @date: 2020/6/24 11:51
  * version: 1.0
@@ -26,14 +27,17 @@ public class Heap {
     /**
      * 由于堆是一个完全二叉树,那么在使用数组进行存储的时候,左子节点和
      * 右子节点的下标分别是当前节点的2倍和2倍+1
-     *
+     * <p>
      * 例如：
-     *      根节点的数组下标为1
-     *      那么根节点的左子节点下标为2*1 = 2
-     *      根节点的右子节点下标为2*1 + 1 = 3
+     * 根节点的数组下标为1
+     * 那么根节点的左子节点下标为2*1 = 2
+     * 根节点的右子节点下标为2*1 + 1 = 3
      */
     private static final Integer num = 2;
-    public Heap(){}
+
+    public Heap() {
+    }
+
     public Heap(int length) {
         this.capacity = new int[length + 1];
         this.length = length;
@@ -41,11 +45,49 @@ public class Heap {
     }
 
     /**
+     * 取数组top10的元素
+     * @param items
+     */
+    public void top10(int[] items) {
+        if (items.length < 10) {
+            return;
+        }
+        // 先构建一个堆，堆的大小为10
+        Heap heap = new Heap(10);
+        // 循环遍历数组items，将数据写入堆
+        for (int i = 0; i < items.length; i++) {
+            // 因为堆可以存储十个元素，前10个直接存入
+            if (i < 10) {
+                heap.insertSmall(items[i]);
+            } else {
+                // 需要和堆顶的元素进行比较，如果小于堆顶的元素的话，就不存储
+                int heapTop = heap.capacity[1];
+                if (items[i] > heapTop) {
+                    heap.capacity[1] = items[i];
+                    heap.smallHeapify(10, 1);
+                }
+            }
+        }
+        System.out.println(Arrays.toString(heap.capacity));
+    }
+
+    public void sort(int[] items, int lastIndex) {
+        this.buildHeap(items, lastIndex);
+        int k = lastIndex;
+        while (k > 1) {
+            swap(items, 1, k);
+            k--;
+            heapify(items, k, 1);
+        }
+    }
+
+    /**
      * 根据跟定的数组和数组中最后使用的下标位置创建一个堆
-     * @param items 数组
+     *
+     * @param items     数组
      * @param lastIndex 数组中使用的最后一个下标位置
      */
-    public void buildHeap (int[] items, int lastIndex) {
+    public void buildHeap(int[] items, int lastIndex) {
         for (int i = lastIndex / num; i >= 1; i--) {
             heapity(items, lastIndex, i);
         }
@@ -53,9 +95,10 @@ public class Heap {
 
     /**
      * 对给定的数组进行堆化，自上而下的堆化
-     * @param items 数组
+     *
+     * @param items     数组
      * @param lastIndex 数组中最后一个元素的下标位置
-     * @param index 需要开始分析的数组位置
+     * @param index     需要开始分析的数组位置
      */
     private void heapity(int[] items, int lastIndex, int index) {
         while (true) {
@@ -69,13 +112,14 @@ public class Heap {
             if (maxPos == index) {
                 break;
             }
-            swap(items, index,maxPos);
+            swap(items, index, maxPos);
             index = maxPos;
         }
     }
 
     /**
      * 向堆中插入数据
+     *
      * @param value
      */
     public void insert(int value) {
@@ -92,6 +136,25 @@ public class Heap {
             this.swap(capacity, i, i >> 1);
             i = i >> 1;
         }
+    }
+
+    /**
+     * 构建一个小顶堆
+     *
+     * @param val 插入的数据元素
+     */
+    public boolean insertSmall(int val) {
+        if (count >= length) {
+            return false;
+        }
+        count++;
+        capacity[count] = val;
+        int i = count;
+        while (i / 2 > 0 && capacity[i] < capacity[i / 2]) {
+            swap(capacity, i, i / 2);
+            i = i / 2;
+        }
+        return true;
     }
 
     /**
@@ -112,10 +175,34 @@ public class Heap {
     }
 
     /**
+     * 将给定的数组进行小顶堆的堆化
+     *
+     * @param n     最后一个元素的位置
+     * @param i     需要开始堆化的位置
+     */
+    private void smallHeapify(int n, int i) {
+        while (true) {
+            int maxPos = i;
+            if (i * 2 <= n && capacity[i] > capacity[i * 2]) {
+                maxPos = i * 2;
+            }
+            if ((i * 2) + 1 <= n && capacity[maxPos] > capacity[(i * 2) + 1]) {
+                maxPos = (i * 2) + 1;
+            }
+            if (maxPos == i) {
+                break;
+            }
+            swap(capacity, maxPos, i);
+            i = maxPos;
+        }
+    }
+
+    /**
      * 将给定的数组根据堆的标准进行格式化
+     *
      * @param items 数组
-     * @param n 堆最后一个元素的下下标位置
-     * @param i 堆定的下标位置
+     * @param n     堆最后一个元素的下下标位置
+     * @param i     堆定的下标位置
      */
     private void heapify(int[] items, int n, int i) {
         while (true) {
@@ -129,7 +216,7 @@ public class Heap {
             if (maxPos == i) {
                 break;
             }
-            swap(items,i,maxPos);
+            swap(items, i, maxPos);
             i = maxPos;
         }
     }
@@ -157,19 +244,9 @@ public class Heap {
     }
 
     public static void main(String[] args) {
-//        Heap heap = new Heap(10);
-//        heap.insert(33);
-//        heap.insert(27);
-//        heap.insert(21);
-//        heap.insert(16);
-//        heap.insert(13);
-//        heap.insert(15);
-//        heap.insert(9);
-//        heap.insert(5);
-//        heap.insert(60);
-//        System.out.println(heap);
-        int[] items = new int[]{0,1,2,3,4,5,6,7,8,9,10};
-        new Heap().buildHeap(items,10);
-        System.out.println(Arrays.toString(items));
+        int[] items = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+        Heap heap = new Heap();
+        heap.top10(items);
+        System.out.println(Arrays.toString(heap.capacity));
     }
 }
