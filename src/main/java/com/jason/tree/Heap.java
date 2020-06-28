@@ -45,6 +45,42 @@ public class Heap {
     }
 
     /**
+     * 获取数组里面中间数
+     * @param items
+     * @return
+     */
+    public int getCenter(int[] items) {
+        if (items.length == 0) {
+            return 0;
+        }
+        if (items.length <= 2) {
+            return items[1];
+        }
+        Heap smallHeap = new Heap(items.length >> 1);
+        Heap bigHeap;
+        if (items.length % 2 == 1) {
+            bigHeap = new Heap((items.length >> 1) + 1);
+        }else {
+            bigHeap = new Heap(items.length >> 1);
+        }
+        for (int num : items) {
+            boolean insertFlag = bigHeap.insertBig(num);
+            // 如果插入失败,说明大顶堆中满了,那么就需要比较大顶堆堆顶的数据和希望插入的数据大小关系
+            if (!insertFlag) {
+                int top = bigHeap.getTop();
+                if (num >= top) {
+                    smallHeap.insertSmall(num);
+                } else {
+                    smallHeap.insertSmall(top);
+                    bigHeap.capacity[1] = num;
+                    bigHeap.bigHeapity(bigHeap.length, 1);
+                }
+            }
+        }
+        return bigHeap.getTop();
+    }
+
+    /**
      * 取数组top10的元素
      * @param items
      */
@@ -175,6 +211,45 @@ public class Heap {
     }
 
     /**
+     * 向大顶堆中写入数据
+     * @param val
+     */
+    private boolean insertBig(int val) {
+        if (count >= length) {
+            return false;
+        }
+        count++;
+        capacity[count] = val;
+        int i = count;
+        while (i / 2 > 0 && capacity[i] > capacity[i / 2]) {
+            swap(capacity, i, i / 2);
+            i = i / 2;
+        }
+        return true;
+    }
+
+    /**
+     * 将给定的数组进行大顶堆的堆化
+     *
+     * @param n     最后一个元素的位置
+     * @param i     需要开始堆化的位置
+     */
+    private void bigHeapity(int n , int i) {
+        while (true) {
+            int maxPos = i;
+            if (i * 2 <= n && capacity[i] < capacity[i * 2]) {
+                maxPos = i * 2;
+            }
+            if (i * 2 + 1 <= n && capacity[maxPos] < capacity[i * 2 + 1]) {
+                maxPos = i*2 + 1;
+            }
+            if (maxPos == i){break;}
+            swap(capacity, maxPos,i);
+            i = maxPos;
+        }
+    }
+
+    /**
      * 将给定的数组进行小顶堆的堆化
      *
      * @param n     最后一个元素的位置
@@ -243,10 +318,18 @@ public class Heap {
         items[index2] = temp;
     }
 
+    /**
+     * 获取堆顶元素
+     * @return 堆顶元素
+     */
+    private int getTop() {
+        return capacity[1];
+    }
+
     public static void main(String[] args) {
-        int[] items = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+        int[] items = new int[]{11,3,2,4,5};
         Heap heap = new Heap();
-        heap.top10(items);
-        System.out.println(Arrays.toString(heap.capacity));
+        int center = heap.getCenter(items);
+        System.out.println(center);
     }
 }
