@@ -1,8 +1,5 @@
 package com.jason;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -20,20 +17,61 @@ public class NodeListDemo {
         n1.next = new Node(3);
         n1.next.next = new Node(1);
 
-        Node n2 = new Node(2);
+        Node n2 = new Node(4);
         n2.next = new Node(3);
         n2.next.next = new Node(4);
         n2.next.next.next = new Node(5);
-        n2.next.next.next.next = new Node(6);
-
-        System.out.println(isPalindrome(n1));
+        n2.next.next.next.next = new Node(4);
+        n2.next.next.next.next.next = new Node(6);
+        n2.next.next.next.next.next.next = new Node(4);
+        System.out.println(deleteByVal(n2,4));
 
 
     }
 
+    private static Node deleteByVal(Node node, int val){
+        if (node.val == val) {
+            node = node.next;
+        }
+        Node p = node;
+        Node prev = node;
+        while(p != null){
+            if(p.val == val){
+                prev.next = p.next;
+            }
+            prev = p;
+            p = p.next;
+        }
+        System.out.println(node);
+        return node;
+    }
+
+    private static void deleteByIndex(Node node, int index){
+        int i = 0;
+        Node p = node;
+        Node prev = null;
+        while(p != null){
+            if(i == index){
+                prev.next = p.next == null ? null : p.next.next;
+            }
+            i++;
+            prev = p;
+            p = p.next;
+        }
+    }
+
+    private static void deleteTailNode(Node node){
+        Node p = node;
+        Node prev = null;
+        while(p.next != null){
+            prev = p;
+            p = p.next;
+        }
+        prev.next = null;
+    }
     /**
      * 判断给定的单列表是否是回文
-     * @param head
+     * @param node
      * @return
      */
     private static boolean isPalindrome(Node node) {
